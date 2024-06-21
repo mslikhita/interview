@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interview Schedule Portal - Data Display</title>
     <style>
-        body, html {
+        body,
+        html {
             height: 100%;
             margin: 0;
             font-family: Arial, sans-serif;
@@ -20,11 +22,11 @@
             padding: 20px 40px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 80%; /* Adjusted to 80% of the viewport width */
-            max-width: 1200px; /* Example maximum width, adjust as needed */
+            width: 80%;
+            max-width: 1200px;
             text-align: center;
             color: white;
-            overflow-x: auto; /* Enable horizontal scroll if needed */
+            overflow-x: auto;
         }
 
         h1 {
@@ -38,7 +40,8 @@
             margin-top: 20px;
         }
 
-        th, td {
+        th,
+        td {
             padding: 10px;
             text-align: left;
             color: white;
@@ -48,8 +51,35 @@
         th {
             background-color: #555;
         }
+
+        .submit-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .submit-button:hover {
+            background-color: #45a049;
+        }
+
+        /* Style for select dropdown */
+        .interview-type-select,
+        .mode-of-interview-select,
+        .stage-select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            background-color: white;
+            color: #555;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>Interview Schedule Portal - Scheduled Interviews</h1>
@@ -59,10 +89,13 @@
                     <th>Candidate Name</th>
                     <th>Email ID</th>
                     <th>Type of Interview</th>
+                    <th>Mode of Interview</th>
                     <th>Stage</th>
                     <th>Timing</th>
+                    <th>Requester</th>
                     <th>Feedback</th>
                     <th>Score</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody id="interviewData">
@@ -72,27 +105,126 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            fetch('http://localhost:3000/interviews')
-                .then(response => response.json())
-                .then(interviews => {
-                    const interviewTableBody = document.getElementById('interviewData');
-                    interviews.forEach(interview => {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td>${interview.candidate_name}</td>
-                            <td>${interview.candidate_email}</td>
-                            <td>${interview.interview_type}</td>
-                            <td>${interview.stage}</td>
-                            <td>${interview.timing}</td>
-                            <td>${interview.feedback}</td>
-                            <td>${interview.score}</td>
-                        `;
-                        interviewTableBody.appendChild(row);
-                    });
-                })
-                .catch(error => console.error('Error fetching interviews:', error));
+        document.addEventListener('DOMContentLoaded', function () {
+            const interviewTableBody = document.getElementById('interviewData');
+
+            // Function to create a dropdown select element with selected value
+            function createSelectElement(options, selectedValue) {
+                const select = document.createElement('select');
+                select.classList.add('interview-type-select');
+                options.forEach(option => {
+                    const optionElement = document.createElement('option');
+                    optionElement.value = option;
+                    optionElement.textContent = option;
+                    if (option === selectedValue) {
+                        optionElement.selected = true;
+                    }
+                    select.appendChild(optionElement);
+                });
+                return select;
+            }
+
+            // Function to create a dropdown select element for stage
+            function createStageSelect(selectedStage) {
+                const select = document.createElement('select');
+                select.classList.add('stage-select');
+                const stages = ['Round 1', 'Round 2', 'Round 3', 'Final Round']; // Example stages, modify as needed
+                stages.forEach(stage => {
+                    const optionElement = document.createElement('option');
+                    optionElement.value = stage;
+                    optionElement.textContent = stage;
+                    if (stage === selectedStage) {
+                        optionElement.selected = true;
+                    }
+                    select.appendChild(optionElement);
+                });
+                return select;
+            }
+
+            function createInterviewRow(interview) {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${interview.candidate_name}</td>
+                    <td>${interview.candidate_email}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>${interview.timing}</td>
+                    <td>${interview.requester}</td>
+                    <td>${interview.feedback}</td>
+                    <td>${interview.score}</td>
+                    <td><button class="submit-button" data-interview-id="${interview.interview_id}">Submit</button></td>
+                `;
+                const interviewTypeSelect = createSelectElement(['F2F', 'Video Interview', 'Telephonic'], interview.type_of_interview);
+                const modeOfInterviewSelect = createSelectElement(['Technical', 'HR'], interview.mode_of_interview);
+                const stageSelect = createStageSelect(interview.stage);
+                row.children[2].appendChild(interviewTypeSelect); // Insert type_of_interview select element into third column
+                row.children[3].appendChild(modeOfInterviewSelect); // Insert mode_of_interview select element into fourth column
+                row.children[4].appendChild(stageSelect); // Insert stage select element into fifth column
+                return row;
+            }
+
+            function fetchInterviews() {
+                fetch('http://localhost:3000/interviews')
+                    .then(response => response.json())
+                    .then(interviews => {
+                        interviews.forEach(interview => {
+                            const row = createInterviewRow(interview);
+                            interviewTableBody.appendChild(row);
+                        });
+
+                        // Attach event listener to each button
+                        interviewTableBody.querySelectorAll('.submit-button').forEach(button => {
+                            button.addEventListener('click', function () {
+                                const interviewId = this.getAttribute('data-interview-id');
+                                submitInterview(interviewId); // Call function to submit interview
+                            });
+                        });
+                    })
+                    .catch(error => console.error('Error fetching interviews:', error));
+            }
+
+            function submitInterview(interviewId) {
+                const row = interviewTableBody.querySelector(`[data-interview-id="${interviewId}"]`).parentElement.parentElement;
+                const inputs = row.querySelectorAll('td:not(:last-child)');
+                const data = {
+                    interview_id: interviewId,
+                    candidate_name: inputs[0].textContent,
+                    candidate_email: inputs[1].textContent,
+                    interview_type: inputs[2].querySelector('select').value, // Get value from type_of_interview select element
+                    mode_of_interview: inputs[3].querySelector('select').value, // Get value from mode_of_interview select element
+                    stage: inputs[4].querySelector('select').value, // Get value from stage select element
+                    timing: inputs[5].textContent,
+                    requester: inputs[6].textContent,
+                    feedback: inputs[7].textContent,
+                    score: inputs[8].textContent
+                };
+
+                // Decide whether to POST or PUT based on interviewId presence
+                const method = interviewId ? 'PUT' : 'POST';
+                const url = interviewId ? `http://localhost:3000/interviews/${interviewId}` : 'http://localhost:3000/interviews';
+
+                fetch(url, {
+                        method: method,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        console.log('Interview submitted successfully:', result);
+                        // Show alert upon successful submission
+                        window.alert('Interview submitted successfully!');
+                        // Optionally update the UI or perform further actions upon successful submission
+                    })
+                    .catch(error => console.error('Error submitting interview:', error));
+            }
+
+            // Fetch interviews on page load
+            fetchInterviews();
         });
     </script>
 </body>
+
 </html>
