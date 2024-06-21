@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Schedule Portal - Data Display</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: rgb(80, 77, 77);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: rgba(31, 27, 27, 0.9);
+            padding: 20px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 80%; /* Adjusted to 80% of the viewport width */
+            max-width: 1200px; /* Example maximum width, adjust as needed */
+            text-align: center;
+            color: white;
+            overflow-x: auto; /* Enable horizontal scroll if needed */
+        }
+
+        h1 {
+            font-size: 24px;
+            color: white;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            color: white;
+            border: 1px solid #ccc;
+        }
+
+        th {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Interview Schedule Portal - Scheduled Interviews</h1>
+        <table id="interviewTable">
+            <thead>
+                <tr>
+                    <th>Candidate Name</th>
+                    <th>Email ID</th>
+                    <th>Type of Interview</th>
+                    <th>Stage</th>
+                    <th>Timing</th>
+                    <th>Feedback</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody id="interviewData">
+                <!-- Data will be dynamically added here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('http://localhost:3000/interviews')
+                .then(response => response.json())
+                .then(interviews => {
+                    const interviewTableBody = document.getElementById('interviewData');
+                    interviews.forEach(interview => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${interview.candidate_name}</td>
+                            <td>${interview.candidate_email}</td>
+                            <td>${interview.interview_type}</td>
+                            <td>${interview.stage}</td>
+                            <td>${interview.timing}</td>
+                            <td>${interview.feedback}</td>
+                            <td>${interview.score}</td>
+                        `;
+                        interviewTableBody.appendChild(row);
+                    });
+                })
+                .catch(error => console.error('Error fetching interviews:', error));
+        });
+    </script>
+</body>
+</html>
