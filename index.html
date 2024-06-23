@@ -17,7 +17,7 @@ html {
     background: rgba(31, 27, 27, 0.9);
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
     width: 95%;
     max-width: 1200px; /* Adjust max-width as needed */
     margin: 20px auto; /* Center align the container */
@@ -75,23 +75,30 @@ th {
     max-width: 150px; /* Limit max-width to prevent excessive width */
 }
 
-.interview-feedback {
+.interview-feedback,
+.score-input,
+td[contenteditable="true"] {
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
-    background-color: white;
-    color: #555;
+    background-color: #000; /* Set background color to black */
+    color: #fff; /* Set text color to white */
     font-size: 12px;
-    width: 100%; /* Adjust width to 100% for full-width appearance */
-    max-width: 100%; /* Take full available width */
-    resize: vertical; /* Allow vertical resizing of textarea */
+    width: 100%;
+    max-width: 100%;
+    resize: vertical;
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Smooth transition for focus effects */
 }
 
-.score-input {
-    width: 60px; /* Adjust width for score input */
-    max-width: 60px; /* Limit max-width to prevent excessive width */
+.interview-feedback:focus,
+.score-input:focus,
+td[contenteditable="true"]:focus {
+    outline: none; /* Remove default outline */
+    border-color: #edf1ed; /* Example: Change border color on focus */
+    box-shadow: 0 0 5px rgba(0, 128, 0, 0.5); /* Example: Add box shadow on focus */
 }
+
 
 .action-cell {
     width: 100px; /* Adjust width for action cell */
@@ -103,9 +110,7 @@ th {
         padding: 10px;
     }
 }
-
-
-</style>
+    </style>
 </head>
 <body>
     <div class="container">
@@ -164,8 +169,8 @@ th {
                     <td></td>
                     <td>${interview.timing}</td>
                     <td contenteditable="true">${interview.requester}</td>
-                    <td>${interview.feedback}</td>
-                    <td contenteditable="true">${interview.score}</td>
+                    <td contenteditable="true" class="interview-feedback">${interview.feedback}</td>
+                    <td contenteditable="true" class="score-input">${interview.score}</td>
                     <td><button class="submit-button" data-interview-id="${interview.interview_id}">Submit</button></td>
                 `;
                 const interviewTypeSelect = createSelectElement(['F2F', 'Video Interview', 'Telephonic'], interview.type_of_interview);
@@ -214,8 +219,8 @@ th {
                     stage: inputs[4].querySelector('select').value,
                     timing: inputs[5].textContent,
                     requester: inputs[6].textContent.trim(), // Ensure you trim whitespace if needed
-                    feedback: feedbackCell.textContent, // Adjust if your feedback is in a different format
-                    score: scoreCell.textContent, // Adjust if your score is in a different format
+                    feedback: feedbackCell.textContent.trim(), // Get updated feedback
+                    score: scoreCell.textContent.trim(), // Get updated score
                 };
 
                 // Validate score between 1 and 10
