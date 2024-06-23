@@ -33,7 +33,7 @@ app.use((req, res, next) => {
 // Route to fetch all interviews with candidate details
 app.get('/interviews', (req, res) => {
     let sql = `
-        SELECT i.interview_id, c.candidate_name, c.candidate_email, i.type_of_interview, i.mode_of_interview, i.stage, i.timing, i.feedback, i.score
+        SELECT i.interview_id, c.candidate_name, c.candidate_email, i.type_of_interview, i.mode_of_interview, i.stage, i.timing, i.requester, i.feedback, i.score
         FROM interview i
         JOIN candidate c ON i.candidate_id = c.candidate_id
     `;
@@ -71,8 +71,8 @@ app.post('/interviews', (req, res) => {
 
 // Route to update interview details
 app.put('/interviews/:interviewId', (req, res) => {
-    const { interviewId } = req.params;
-    const { requester, feedback, score } = req.body;
+    const interviewId = req.params.interviewId;
+    const { type_of_interview, mode_of_interview, stage, requester, feedback, score } = req.body;
 
     // Validate request body fields
     if (!requester || !feedback || !score) {
@@ -88,10 +88,10 @@ app.put('/interviews/:interviewId', (req, res) => {
     // Update interview in the database
     let sql = `
         UPDATE interview
-        SET requester = ?, feedback = ?, score = ?
+        SET type_of_interview = ?, mode_of_interview = ?, stage = ?, requester = ?, feedback = ?, score = ?
         WHERE interview_id = ?
     `;
-    db.query(sql, [requester, feedback, parsedScore, interviewId], (err, result) => {
+    db.query(sql, [type_of_interview, mode_of_interview, stage, requester, feedback, parsedScore, interviewId], (err, result) => {
         if (err) {
             console.error('Error updating interview:', err);
             return res.status(500).json({ error: 'An error occurred while updating interview.' });
