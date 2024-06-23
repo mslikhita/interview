@@ -5,113 +5,132 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interview Schedule Portal - Data Display</title>
     <style>
-        body,
-        html {
-            height: 100%;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: rgb(80, 77, 77);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+       body,
+html {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: rgb(80, 77, 77);
+}
 
-        .container {
-            background: rgba(31, 27, 27, 0.9);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 95%; /* Adjusted to fit better */
-            max-width: 1200px;
-            text-align: center;
-            color: white;
-          
-        }
+.container {
+    background: rgba(31, 27, 27, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 95%;
+    max-width: 1200px; /* Adjust max-width as needed */
+    margin: 20px auto; /* Center align the container */
+    overflow: hidden; /* Hide overflow to prevent scrolling */
+}
 
-        h1 {
-            font-size: 24px;
-            color: white;
-            margin-bottom: 20px;
-        }
+h1 {
+    font-size: 24px;
+    color: white;
+    margin-bottom: 20px;
+}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    table-layout: fixed; /* Ensure fixed table layout */
+}
 
-        th,
-        td {
-            padding: 12px;
-            text-align: left;
-            color: white;
-            border: 1px solid #ccc;
-        }
+th,
+td {
+    padding: 12px;
+    text-align: left;
+    color: white;
+    border: 1px solid #ccc;
+    word-wrap: break-word; /* Allow text to wrap within cells */
+}
 
-        th {
-            background-color: #555;
-        }
+th {
+    background-color: #555;
+}
 
-        .submit-button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 8px 12px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+.submit-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
 
-        .submit-button:hover {
-            background-color: #45a049;
-        }
+.submit-button:hover {
+    background-color: #45a049;
+}
 
-         /* Style for select dropdowns */
-         .interview-select.type-of-interview {
-            width: 15px; /* Width for Type of Interview */
-        }
-        .interview-select.mode-of-interview,
-        .interview-select.stage {
-            width: 125px; /* Width for Mode of Interview and Stage */
-        }
-        .interview-select {
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-            background-color: white;
-            color: #555;
-            font-size: 12px; /* Adjust font size if needed */
-        }
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
-        }
-    </style>
+.interview-select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: white;
+    color: #555;
+    font-size: 12px;
+    width: 100%; /* Adjust width to 100% for full-width appearance */
+    max-width: 150px; /* Limit max-width to prevent excessive width */
+}
+
+.interview-feedback {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: white;
+    color: #555;
+    font-size: 12px;
+    width: 100%; /* Adjust width to 100% for full-width appearance */
+    max-width: 100%; /* Take full available width */
+    resize: vertical; /* Allow vertical resizing of textarea */
+}
+
+.score-input {
+    width: 60px; /* Adjust width for score input */
+    max-width: 60px; /* Limit max-width to prevent excessive width */
+}
+
+.action-cell {
+    width: 100px; /* Adjust width for action cell */
+    max-width: 100px; /* Limit max-width to prevent excessive width */
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+}
+
+
+</style>
 </head>
 <body>
     <div class="container">
         <h1>Interview Schedule Portal - Scheduled Interviews</h1>
-        <table id="interviewTable">
-            <thead>
-                <tr>
-                    <th>Candidate Name</th>
-                    <th>Email ID</th>
-                    <th>Type of Interview</th>
-                    <th>Mode of Interview</th>
-                    <th>Stage</th>
-                    <th>Timing</th>
-                    <th>Requester</th>
-                    <th>Feedback</th>
-                    <th>Score</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="interviewData">
-                <!-- Data will be dynamically added here -->
-            </tbody>
-        </table>
+        <div style="overflow-x:auto;">
+            <table id="interviewTable">
+                <thead>
+                    <tr>
+                        <th>Candidate Name</th>
+                        <th>Email ID</th>
+                        <th>Type of Interview</th>
+                        <th>Mode of Interview</th>
+                        <th>Stage</th>
+                        <th>Timing</th>
+                        <th>Requester</th>
+                        <th>Feedback</th>
+                        <th>Score</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="interviewData">
+                    <!-- Data will be dynamically added here -->
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <script>
@@ -144,9 +163,9 @@
                     <td></td>
                     <td></td>
                     <td>${interview.timing}</td>
-                    <td>${interview.requester}</td>
+                    <td contenteditable="true">${interview.requester}</td>
                     <td>${interview.feedback}</td>
-                    <td>${interview.score}</td>
+                    <td contenteditable="true">${interview.score}</td>
                     <td><button class="submit-button" data-interview-id="${interview.interview_id}">Submit</button></td>
                 `;
                 const interviewTypeSelect = createSelectElement(['F2F', 'Video Interview', 'Telephonic'], interview.type_of_interview);
@@ -172,7 +191,7 @@
                         interviewTableBody.querySelectorAll('.submit-button').forEach(button => {
                             button.addEventListener('click', function () {
                                 const interviewId = this.getAttribute('data-interview-id');
-                                submitInterview(interviewId);
+                                submitInterview(interviewId, button); // Pass button reference to handle disabling
                             });
                         });
                     })
@@ -180,9 +199,12 @@
             }
 
             // Function to submit interview data
-            function submitInterview(interviewId) {
+            function submitInterview(interviewId, button) {
                 const row = interviewTableBody.querySelector(`[data-interview-id="${interviewId}"]`).parentElement.parentElement;
                 const inputs = row.querySelectorAll('td:not(:last-child)');
+                const feedbackCell = inputs[7];
+                const scoreCell = inputs[8];
+
                 const data = {
                     interview_id: interviewId,
                     candidate_name: inputs[0].textContent,
@@ -191,16 +213,22 @@
                     mode_of_interview: inputs[3].querySelector('select').value,
                     stage: inputs[4].querySelector('select').value,
                     timing: inputs[5].textContent,
-                    requester: inputs[6].textContent,
-                    feedback: inputs[7].textContent,
-                    score: inputs[8].textContent
+                    requester: inputs[6].textContent.trim(), // Ensure you trim whitespace if needed
+                    feedback: feedbackCell.textContent, // Adjust if your feedback is in a different format
+                    score: scoreCell.textContent, // Adjust if your score is in a different format
                 };
 
-                const method = interviewId ? 'PUT' : 'POST';
-                const url = interviewId ? `http://localhost:3000/interviews/${interviewId}` : 'http://localhost:3000/interviews';
+                // Validate score between 1 and 10
+                const score = parseInt(data.score);
+                if (isNaN(score) || score < 1 || score > 10) {
+                    window.alert('Score must be a number between 1 and 10.');
+                    return;
+                }
 
-                fetch(url, {
-                    method: method,
+                button.disabled = true; // Disable the button during submission
+
+                fetch(`http://localhost:3000/interviews/${interviewId}`, {
+                    method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                     },
@@ -209,10 +237,16 @@
                 .then(response => response.json())
                 .then(result => {
                     console.log('Interview submitted successfully:', result);
-                    window.alert('Interview submitted successfully!');
+                    window.alert('Interview updated successfully!');
                     // Additional logic upon successful submission
                 })
-                .catch(error => console.error('Error submitting interview:', error));
+                .catch(error => {
+                    console.error('Error submitting interview:', error);
+                    window.alert('Error submitting interview. Please try again.');
+                })
+                .finally(() => {
+                    button.disabled = false; // Enable the button after the operation completes
+                });
             }
 
             // Fetch interviews on page load
