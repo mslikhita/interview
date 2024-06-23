@@ -8,69 +8,96 @@ const port = 3000;
 app.use(cors());
 app.use(express.json());
 
-// MySQL connection
-const connection = mysql.createConnection({
+// MySQL Connection
+const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    database: 'samartha_recruitment'
+    database: 'samartha_recruitment',
 });
 
-connection.connect((err) => {
+// Connect to MySQL
+db.connect((err) => {
     if (err) {
-        console.error('Error connecting to MySQL database:', err);
-        return;
+        console.error('Error connecting to MySQL:', err);
+        throw err;
     }
     console.log('Connected to MySQL database');
 });
 
-// GET all interviews with candidate details
-app.get('/interviews', (req, res) => {
-    const sql = `
-        SELECT interview.interview_id, interview.candidate_id, candidate.candidate_name, candidate.candidate_email, 
-               interview.type_of_interview, interview.mode_of_interview, interview.stage, interview.timing, interview.requester, interview.feedback, interview.score
-        FROM interview
-        INNER JOIN candidate ON interview.candidate_id = candidate.candidate_id
-    `;
+// Middleware to log requests
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.url}`);
+    next();
+});
 
-    connection.query(sql, (error, results) => {
-        if (error) {
-            console.error('Error retrieving interviews:', error);
-            return res.status(500).json({ error: 'An error occurred. Please try again later.' });
+// Route to fetch all interviews with candidate details
+app.get('/interviews', (req, res) => {
+    let sql = `
+        SELECT i.interview_id, c.candidate_name, c.candidate_email, i.type_of_interview, i.mode_of_interview, i.stage, i.timing, i.feedback, i.score
+        FROM interview i
+        JOIN candidate c ON i.candidate_id = c.candidate_id
+    `;
+    db.query(sql, (err, results) => {
+        if (err) {
+            console.error('Error fetching interviews:', err);
+            return res.status(500).json({ error: 'An error occurred while fetching data.' });
         }
-        res.status(200).json(results);
+        res.json(results);
     });
 });
 
-// PUT Method: Update interview by ID
-app.put('/interviews/:interview_id', (req, res) => {
-    const interviewId = req.params.interview_id;
-    const { type_of_interview, mode_of_interview, stage, timing, requester, feedback, score } = req.body;
+// Route to create a new interview
+app.post('/interviews', (req, res) => {
+    const { candidate_id, type_of_interview, mode_of_interview, stage, timing } = req.body;
 
-    const sql = `
+    // Validate required fields
+    if (!candidate_id || !type_of_interview || !mode_of_interview || !stage || !timing) {
+        return res.status(400).json({ error: 'Candidate ID, type of interview, mode of interview, stage, and timing are required fields.' });
+    }
+
+    // Create new interview in the database
+    let sql = `
+        INSERT INTO interview (candidate_id, type_of_interview, mode_of_interview, stage, timing)
+        VALUES (?, ?, ?, ?, ?)
+    `;
+    db.query(sql, [candidate_id, type_of_interview, mode_of_interview, stage, timing], (err, result) => {
+        if (err) {
+            console.error('Error creating new interview:', err);
+            return res.status(500).json({ error: 'An error occurred while creating new interview.' });
+        }
+        res.json({ message: 'New interview created successfully.', interview_id: result.insertId });
+    });
+});
+
+// Route to update interview details
+app.put('/interviews/:interviewId', (req, res) => {
+    const { interviewId } = req.params;
+    const { requester, feedback, score } = req.body;
+
+    // Validate request body fields
+    if (!requester || !feedback || !score) {
+        return res.status(400).json({ error: 'Requester, feedback, and score are required fields.' });
+    }
+
+    // Validate score (optional)
+    const parsedScore = parseInt(score);
+    if (isNaN(parsedScore) || parsedScore < 1 || parsedScore > 10) {
+        return res.status(400).json({ error: 'Score must be a number between 1 and 10.' });
+    }
+
+    // Update interview in the database
+    let sql = `
         UPDATE interview
-        SET type_of_interview = ?, mode_of_interview = ?, stage = ?, timing = ?, requester = ?, feedback = ?, score = ?
+        SET requester = ?, feedback = ?, score = ?
         WHERE interview_id = ?
     `;
-    const values = [type_of_interview, mode_of_interview, stage, timing, requester, feedback, score, interviewId];
-
-    connection.query(sql, values, (error, results) => {
-        if (error) {
-            console.error('Error updating interview:', error);
-            return res.status(500).json({ error: 'An error occurred. Please try again later.' });
+    db.query(sql, [requester, feedback, parsedScore, interviewId], (err, result) => {
+        if (err) {
+            console.error('Error updating interview:', err);
+            return res.status(500).json({ error: 'An error occurred while updating interview.' });
         }
-
-        if (results.affectedRows === 0) {
-            return res.status(404).json({ error: 'Interview not found.' });
-        }
-
-        console.log('Interview updated successfully.');
-        res.status(200).json({ message: 'Interview updated successfully.' });
+        res.json({ message: 'Interview updated successfully.' });
     });
-});
-
-// Error handling for non-existing routes
-app.use((req, res) => {
-    res.status(404).json({ error: 'Route not found' });
 });
 
 // Start server
