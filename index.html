@@ -5,111 +5,114 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interview Schedule Portal - Data Display</title>
     <style>
-       body,
-html {
-    height: 100%;
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: rgb(80, 77, 77);
-}
+        body,
+        html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: rgb(80, 77, 77);
+            display: flex; /* Use flexbox for vertical alignment */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+        }
 
-.container {
-    background: rgba(31, 27, 27, 0.9);
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
-    width: 95%;
-    max-width: 1200px; /* Adjust max-width as needed */
-    margin: 20px auto; /* Center align the container */
-    overflow: hidden; /* Hide overflow to prevent scrolling */
-}
+        .container {
+            background: rgba(31, 27, 27, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+            width: 95%;
+            max-width: 1200px; /* Adjust max-width as needed */
+            margin: 20px auto; /* Center align the container */
+            overflow: hidden; /* Hide overflow to prevent scrolling */
+        }
 
-h1 {
-    font-size: 24px;
-    color: white;
-    margin-bottom: 20px;
-}
+        h1 {
+            font-size: 24px;
+            color: white;
+            margin-bottom: 20px;
+            text-align: center; /* Center align text */
+        }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    table-layout: fixed; /* Ensure fixed table layout */
-}
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            table-layout: fixed; /* Ensure fixed table layout */
+        }
 
-th,
-td {
-    padding: 12px;
-    text-align: left;
-    color: white;
-    border: 1px solid #ccc;
-    word-wrap: break-word; /* Allow text to wrap within cells */
-}
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            color: white;
+            border: 1px solid #ccc;
+            word-wrap: break-word; /* Allow text to wrap within cells */
+        }
 
-th {
-    background-color: #555;
-}
+        th {
+            background-color: #555;
+        }
 
-.submit-button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
+        .submit-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
 
-.submit-button:hover {
-    background-color: #45a049;
-}
+        .submit-button:hover {
+            background-color: #45a049;
+        }
 
-.interview-select {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    background-color: white;
-    color: #555;
-    font-size: 12px;
-    width: 100%; /* Adjust width to 100% for full-width appearance */
-    max-width: 150px; /* Limit max-width to prevent excessive width */
-}
+        .interview-select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            background-color: white;
+            color: #555;
+            font-size: 12px;
+            width: 100%; /* Adjust width to 100% for full-width appearance */
+            max-width: 150px; /* Limit max-width to prevent excessive width */
+        }
 
-.interview-feedback,
-.score-input,
-td[contenteditable="true"] {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    background-color: #000; /* Set background color to black */
-    color: #fff; /* Set text color to white */
-    font-size: 12px;
-    width: 100%;
-    max-width: 100%;
-    resize: vertical;
-    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Smooth transition for focus effects */
-}
+        .interview-feedback,
+        .score-input,
+        td[contenteditable="true"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            background-color: #000; /* Set background color to black */
+            color: #fff; /* Set text color to white */
+            font-size: 12px;
+            width: 100%;
+            max-width: 100%;
+            resize: vertical;
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Smooth transition for focus effects */
+        }
 
-.interview-feedback:focus,
-.score-input:focus,
-td[contenteditable="true"]:focus {
-    outline: none; /* Remove default outline */
-    border-color: #edf1ed; /* Example: Change border color on focus */
-    box-shadow: 0 0 5px rgba(0, 128, 0, 0.5); /* Example: Add box shadow on focus */
-}
+        .interview-feedback:focus,
+        .score-input:focus,
+        td[contenteditable="true"]:focus {
+            outline: none; /* Remove default outline */
+            border-color: #edf1ed; /* Example: Change border color on focus */
+            box-shadow: 0 0 5px rgba(0, 128, 0, 0.5); /* Example: Add box shadow on focus */
+        }
 
+        .action-cell {
+            width: 100px; /* Adjust width for action cell */
+            max-width: 100px; /* Limit max-width to prevent excessive width */
+        }
 
-.action-cell {
-    width: 100px; /* Adjust width for action cell */
-    max-width: 100px; /* Limit max-width to prevent excessive width */
-}
-
-@media (max-width: 768px) {
-    .container {
-        padding: 10px;
-    }
-}
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -164,21 +167,26 @@ td[contenteditable="true"]:focus {
                 row.innerHTML = `
                     <td>${interview.candidate_name}</td>
                     <td>${interview.candidate_email}</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td class="interview-type"></td>
+                    <td class="interview-mode"></td>
+                    <td class="interview-stage"></td>
                     <td>${interview.timing}</td>
                     <td contenteditable="true">${interview.requester}</td>
                     <td contenteditable="true" class="interview-feedback">${interview.feedback}</td>
                     <td contenteditable="true" class="score-input">${interview.score}</td>
                     <td><button class="submit-button" data-interview-id="${interview.interview_id}">Submit</button></td>
                 `;
+                
+                // Create select elements
                 const interviewTypeSelect = createSelectElement(['F2F', 'Video Interview', 'Telephonic'], interview.type_of_interview);
                 const modeOfInterviewSelect = createSelectElement(['Technical', 'HR'], interview.mode_of_interview);
                 const stageSelect = createSelectElement(['Round 1', 'Round 2', 'Round 3', 'Final Round'], interview.stage);
-                row.children[2].appendChild(interviewTypeSelect); // Type of Interview
-                row.children[3].appendChild(modeOfInterviewSelect); // Mode of Interview
-                row.children[4].appendChild(stageSelect); // Stage
+
+                // Append select elements to respective TDs
+                row.querySelector('.interview-type').appendChild(interviewTypeSelect);
+                row.querySelector('.interview-mode').appendChild(modeOfInterviewSelect);
+                row.querySelector('.interview-stage').appendChild(stageSelect);
+
                 return row;
             }
 
@@ -210,17 +218,27 @@ td[contenteditable="true"]:focus {
                 const feedbackCell = inputs[7];
                 const scoreCell = inputs[8];
 
+                // Check if all required fields are filled
+                const requesterValue = inputs[6].textContent.trim();
+                const feedbackValue = feedbackCell.textContent.trim();
+                const scoreValue = scoreCell.textContent.trim();
+
+                if (!requesterValue || !feedbackValue || !scoreValue) {
+                    window.alert('Please fill in all fields (Requester, Feedback, Score) before submitting.');
+                    return;
+                }
+
                 const data = {
                     interview_id: interviewId,
                     candidate_name: inputs[0].textContent,
                     candidate_email: inputs[1].textContent,
-                    type_of_interview: inputs[2].querySelector('select').value,
-                    mode_of_interview: inputs[3].querySelector('select').value,
-                    stage: inputs[4].querySelector('select').value,
+                    type_of_interview: row.querySelector('.interview-type select').value,
+                    mode_of_interview: row.querySelector('.interview-mode select').value,
+                    stage: row.querySelector('.interview-stage select').value,
                     timing: inputs[5].textContent,
-                    requester: inputs[6].textContent.trim(), // Ensure you trim whitespace if needed
-                    feedback: feedbackCell.textContent.trim(), // Get updated feedback
-                    score: scoreCell.textContent.trim(), // Get updated score
+                    requester: requesterValue,
+                    feedback: feedbackValue,
+                    score: scoreValue,
                 };
 
                 // Validate score between 1 and 10
